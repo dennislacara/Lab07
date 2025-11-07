@@ -19,7 +19,7 @@ class View:
         self.alert = AlertManager(page)
 
         # Controller
-        self.controller = None
+        self._controller = None
 
     def show_alert(self, messaggio):
         self.alert.show_alert(messaggio)
@@ -36,9 +36,18 @@ class View:
         self.txt_titolo = ft.Text(value="Musei di Torino", size=38, weight=ft.FontWeight.BOLD)
 
         # --- Sezione 2: Filtraggio ---
+        self._musei_Dropdown = ft.Dropdown(label="Museo", width = 400, on_change= self.controller.on_change_Dropdown)
+        self._musei_Dropdown.options = self.controller.popolaDropdownMusei()
+
+        self._epoca_Dropdown = ft.Dropdown(label="Epoca", width = 400, on_change=self.controller.on_change_Dropdown)
+        self._epoca_Dropdown.options = self.controller.popolaDropdownEpoca()
         # TODO
 
         # Sezione 3: Artefatti
+        btn_mostra_artefatti = ft.ElevatedButton(text='Mostra Artefatti',
+                                                 width=200,
+                                                 on_click=self.controller.mostraArtefatti)
+        self._lst_artefatti = ft.ListView(expand=True, spacing=10, padding=20, auto_scroll=True)
         # TODO
 
         # --- Toggle Tema ---
@@ -53,13 +62,17 @@ class View:
             ft.Divider(),
 
             # Sezione 2: Filtraggio
+            ft.Row(controls=[self._musei_Dropdown, self._epoca_Dropdown], alignment= ft.MainAxisAlignment.CENTER),
+            ft.Divider(),
             # TODO
 
             # Sezione 3: Artefatti
+            ft.Row(controls=[btn_mostra_artefatti], alignment=ft.MainAxisAlignment.CENTER),
+            self._lst_artefatti,
             # TODO
         )
 
-        self.page.scroll = "adaptive"
+        #self.page.scroll = "adaptive"
         self.page.update()
 
     def cambia_tema(self, e):
