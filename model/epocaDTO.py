@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 
-
 @dataclass()
 class SecolodC:
     secolo: str
@@ -18,8 +17,3 @@ class SecoloaC:
         return self.secolo
     def __lt__(self, other):
         return self.secolo < other.secolo
-
-
-
-
-
