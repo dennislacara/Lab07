@@ -1,5 +1,6 @@
 from database.DB_connect import ConnessioneDB
 from model.artefattoDTO import Artefatto
+from model.epocaDTO import SecoloaC, SecolodC
 
 """
     ARTEFATTO DAO
@@ -44,8 +45,12 @@ class ArtefattoDAO:
             cursor.execute(query)
             for row in cursor:
                 epoca = row[0]
+                if 'a.C.' in epoca:
+                    epoca = SecoloaC(epoca)
+                else:
+                    epoca = SecolodC(epoca)
                 listaEpoche.append(epoca)
-            return listaEpoche
+            return sorted(listaEpoche)
 
     @staticmethod
     def get_artefattiX_Museo(museo, epoca):
@@ -62,8 +67,8 @@ class ArtefattoDAO:
                 epoca = None
             cursor = cnx.cursor(dictionary=True)
             query = """SELECT a.id, a.nome, a.tipologia, a.epoca, a.id_museo
-                       FROM artefatto a, museo m
-                       WHERE a.id_museo = m.id and m.nome = COALESCE(%s, m.nome)
+                       FROM  museo m, artefatto a
+                       WHERE m.id = a.id_museo and m.nome = COALESCE(%s, m.nome)
                        and a.epoca = COALESCE(%s, a.epoca)"""
             cursor.execute(query, (museo, epoca,))
             for row in cursor:
